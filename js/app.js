@@ -11,6 +11,10 @@
   const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
   const params = new URLSearchParams(location.search);
+  if (params.has("host")) {
+    location.replace("/share");
+    return;
+  }
   const guest = (params.get("to") || params.get("guest") || "").trim().slice(0, 60);
 
   /* ---------------------------------------------------------
@@ -659,24 +663,6 @@
         copy(data.url);
       }
     });
-
-    if (!params.has("host")) return;
-    const tool = $("#host-tool");
-    tool.hidden = false;
-    $("#host-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = $("#host-name").value.trim();
-      if (!name) return;
-      const url = `${location.origin}${location.pathname}?to=${enc(name)}`;
-      $("#host-link").value = url;
-      $("#host-wa").href =
-        "https://wa.me/?text=" +
-        enc(
-          `Assalamu Alaikum ${name} 🌙\n\nYou and your family are warmly invited to the wedding of *Nowfal & Shibna* on Thursday, 17 December 2026 at Gonikoppal, In shaa Allah.\n\nOpen your invitation 💌\n${url}`
-        );
-      $("#host-out").hidden = false;
-    });
-    $("#host-copy").addEventListener("click", () => copy($("#host-link").value));
   }
 
   /* ---------------------------------------------------------

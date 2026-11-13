@@ -5,6 +5,7 @@
    ============================================================ */
 
 window.WEDDING = {
+  siteUrl: "https://mrg-invitation-nowfal.vercel.app/",
   groom: "Nowfal",
   bride: "Shibna",
   hashtag: "#NowfalWedsShibna",

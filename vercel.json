@@ -1,5 +1,12 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "nowfal-share.vercel.app" }],
+      "destination": "/share"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

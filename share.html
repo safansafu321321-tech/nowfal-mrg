@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#04241b" />
+    <meta name="robots" content="noindex" />
+    <title>Invitation Link Maker — Nowfal & Shibna</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/share.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>" />
+  </head>
+  <body class="share-page">
+    <div class="pattern-bg" aria-hidden="true"></div>
+
+    <main class="share-wrap">
+      <header class="share-head">
+        <span class="share-moon" aria-hidden="true">☪</span>
+        <p class="eyebrow gold">Invitation link maker</p>
+        <h1>Nowfal &amp; Shibna</h1>
+        <p class="share-sub">Thursday, 17 December 2026 · Gonikoppal</p>
+      </header>
+
+      <section class="share-card">
+        <form id="share-form" autocomplete="off">
+          <label>
+            <span>Guest name</span>
+            <input id="guest-name" type="text" placeholder="e.g. Ahmed &amp; Family" maxlength="60" required />
+          </label>
+          <label>
+            <span>WhatsApp number <em>(optional)</em></span>
+            <input id="guest-phone" type="tel" inputmode="numeric" placeholder="10-digit mobile number" maxlength="16" />
+          </label>
+          <button type="submit" class="btn">Create invitation</button>
+        </form>
+
+        <div class="share-out" id="share-out" hidden>
+          <p class="share-for">Invitation for <strong id="out-name"></strong></p>
+          <a class="share-link" id="out-link" target="_blank" rel="noopener"></a>
+
+          <label class="share-msg">
+            <span>Message (you can edit)</span>
+            <textarea id="out-msg" rows="7"></textarea>
+          </label>
+
+          <div class="share-actions">
+            <a class="btn whatsapp" id="send-wa" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.8z" /><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a4 4 0 0 1-2-2l1-1-1-2z" /></svg>
+              <span id="send-wa-label">Send on WhatsApp</span>
+            </a>
+            <button type="button" class="btn ghost" id="native-share">Share…</button>
+            <button type="button" class="btn ghost" id="copy-link">Copy link</button>
+            <button type="button" class="btn ghost" id="copy-msg">Copy message</button>
+          </div>
+          <button type="button" class="share-next" id="next-guest">+ Next guest</button>
+        </div>
+      </section>
+
+      <section class="share-card share-general">
+        <p>General invitation (no name)</p>
+        <div class="share-actions">
+          <button type="button" class="btn ghost" id="copy-general">Copy link</button>
+          <a class="btn ghost" id="open-general" target="_blank" rel="noopener">Open invitation</a>
+        </div>
+      </section>
+
+      <section class="share-card" id="recent-card" hidden>
+        <div class="recent-head">
+          <p>Sent so far <b id="recent-count"></b></p>
+          <button type="button" class="share-clear" id="recent-clear">Clear list</button>
+        </div>
+        <ul class="recent" id="recent"></ul>
+      </section>
+    </main>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/share.js"></script>
+  </body>
+</html>
