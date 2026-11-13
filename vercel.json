@@ -3,7 +3,7 @@
   "redirects": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "nowfal-share.vercel.app" }],
+      "has": [{ "type": "host", "value": "mrg-invitation-safan-share.vercel.app" }],
       "destination": "/share",
       "permanent": false
     }

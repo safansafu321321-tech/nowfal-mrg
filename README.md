@@ -19,7 +19,8 @@ Thursday, 17 December 2026 (Rajab 8, 1448) · Gonikoppal
 ## Personal invitations
 
 - Guest link: `https://your-site/?to=Ahmed%20%26%20Family` — the guest's name appears on the opening screen and the invitation card.
-- Link maker for the family: open `https://your-site/?host` and scroll to the bottom. Type a name, then copy the link or send it straight to WhatsApp.
+- Invitation: https://mrg-invitation-safan.vercel.app
+- Link maker for the family: https://mrg-invitation-safan-share.vercel.app (same page as `/share`). Type a guest's name and optional WhatsApp number, then send, share or copy their personal link.
 
 ## Run locally
 
