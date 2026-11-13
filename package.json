@@ -1,0 +1,9 @@
+{
+  "name": "nowfal-shibna-invitation",
+  "private": true,
+  "description": "Wedding invitation for Nowfal P.E. & Shibna Nasreen K.A. — 17 December 2026, Gonikoppal",
+  "scripts": {
+    "start": "npx --yes serve -l 5173",
+    "deploy": "npx --yes vercel --yes --prod"
+  }
+}
