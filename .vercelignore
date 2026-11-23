@@ -1,0 +1,10 @@
+node_modules
+.vercel
+videos/_tools
+videos/*.mp4
+videos/*.jpg
+videos/std-assets/cards
+videos/std-assets/clips
+videos/std-assets/fonts
+videos/std-assets/work
+videos/std-assets/*.js
