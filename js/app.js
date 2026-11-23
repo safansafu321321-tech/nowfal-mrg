@@ -700,33 +700,72 @@
     let player = null;
     let ready = false;
     let wanted = false;
+    let resumeTries = 0;
+    let resumeTimer = 0;
 
     const start = () => {
-      player.seekTo(startAt, true);
-      player.unMute();
-      player.setVolume(volume);
-      player.playVideo();
+      if (!player) return;
+      clearTimeout(resumeTimer);
+      resumeTries = 0;
+      try {
+        player.unMute();
+        player.setVolume(volume);
+        if (startAt > 0) player.seekTo(startAt, true);
+        player.playVideo();
+      } catch (_) {
+        /* player not ready yet */
+      }
+    };
+
+    const keepPlaying = () => {
+      if (!wanted || !ready || !player || document.hidden) return;
+      if (resumeTries >= 8) return;
+      const state = player.getPlayerState();
+      if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.CUED) {
+        resumeTries += 1;
+        player.unMute();
+        player.setVolume(volume);
+        player.playVideo();
+      }
     };
 
     window.onYouTubeIframeAPIReady = () => {
       player = new YT.Player("yt-player", {
         videoId: cfg.youtubeId,
-        playerVars: { autoplay: 0, controls: 0, playsinline: 1, rel: 0, start: Math.floor(startAt) },
+        width: 200,
+        height: 200,
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0,
+          start: Math.floor(startAt),
+          origin: window.location.origin,
+        },
         events: {
           onReady: () => {
             ready = true;
-            if (wanted) {
-              start();
-            } else {
-              // Buffer silently so the nasheed starts the instant the seal is tapped.
-              player.mute();
-              player.playVideo();
-            }
+            // Cue only — do not mute-autoplay beforehand.
+            // Unmute after a muted buffer often gets blocked and stops at once.
+            player.cueVideoById({ videoId: cfg.youtubeId, startSeconds: startAt });
+            if (wanted) start();
           },
           onStateChange: (e) => {
+            if (e.data === YT.PlayerState.PLAYING) {
+              resumeTries = 0;
+              return;
+            }
             if (e.data === YT.PlayerState.ENDED) {
               player.seekTo(startAt, true);
               player.playVideo();
+              return;
+            }
+            if (e.data === YT.PlayerState.PAUSED && wanted && !document.hidden) {
+              clearTimeout(resumeTimer);
+              resumeTimer = setTimeout(keepPlaying, 200);
             }
           },
         },
@@ -737,9 +776,14 @@
     document.head.appendChild(tag);
 
     pauseWhileHidden(
-      () => player.pauseVideo(),
-      () => player.playVideo(),
-      () => ready && player.getPlayerState() === YT.PlayerState.PLAYING
+      () => {
+        clearTimeout(resumeTimer);
+        if (player) player.pauseVideo();
+      },
+      () => {
+        if (player) player.playVideo();
+      },
+      () => ready && player && player.getPlayerState() === YT.PlayerState.PLAYING
     );
 
     return () => {

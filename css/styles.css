@@ -1009,16 +1009,19 @@ body.revealed .hero-names .amp {
   color: rgba(251, 246, 236, 0.75);
 }
 
-/* Hidden YouTube player for the nasheed */
+/* YouTube nasheed player — must stay in-viewport with real opacity.
+   Off-screen / opacity:0 / z-index:-1 all make YouTube pause immediately.
+   Sits under the dock (z-index 60) so guests never see the video. */
 .yt-music {
   position: fixed;
   left: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: 50;
   width: 200px;
   height: 200px;
-  opacity: 0;
+  opacity: 1;
   pointer-events: none;
+  overflow: hidden;
 }
 
 /* =========================================================
