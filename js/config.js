@@ -36,11 +36,12 @@ window.WEDDING = {
   /* WhatsApp number with country code, no + or spaces */
   whatsapp: "916364229355",
 
-  /* Background nasheed — local file only (no YouTube). */
+  /* Background nasheed — local file only (no YouTube).
+     startAt skips the silent intro so the seal opens on real vocals. */
   music: {
     src: "videos/std-assets/website-song.m4a",
     youtubeId: "",
-    startAt: 0,
+    startAt: 8.5,
     volume: 70,
   },
 };

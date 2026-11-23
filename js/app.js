@@ -689,7 +689,7 @@
       const audio = $("#bg-music");
       const startAt = cfg.startAt || 0;
       audio.src = cfg.src;
-      audio.loop = true;
+      audio.loop = false;
       audio.preload = "auto";
       audio.volume = volume / 100;
       try {
@@ -697,13 +697,40 @@
       } catch (_) {
         /* ignore */
       }
-      const play = () => {
+
+      const jumpToSong = () => {
+        if (!startAt) return;
         try {
-          if (startAt && audio.currentTime < startAt) audio.currentTime = startAt;
+          audio.currentTime = startAt;
         } catch (_) {
           /* ignore seek before metadata */
         }
-        return audio.play().catch(() => {});
+      };
+
+      // Loop from the real song start, not the silent intro.
+      audio.addEventListener("ended", () => {
+        jumpToSong();
+        audio.play().catch(() => {});
+      });
+      audio.addEventListener("timeupdate", () => {
+        if (startAt && !audio.paused && audio.currentTime < startAt - 0.05) {
+          jumpToSong();
+        }
+      });
+
+      const play = () => {
+        const start = () => {
+          jumpToSong();
+          return audio.play().catch(() => {});
+        };
+        if (audio.readyState >= 1) return start();
+        return new Promise((resolve) => {
+          const go = () => {
+            audio.removeEventListener("loadedmetadata", go);
+            resolve(start());
+          };
+          audio.addEventListener("loadedmetadata", go);
+        });
       };
       pauseWhileHidden(() => audio.pause(), play, () => !audio.paused);
       return play;
