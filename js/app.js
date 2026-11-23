@@ -687,9 +687,24 @@
 
     if (cfg.src) {
       const audio = $("#bg-music");
+      const startAt = cfg.startAt || 0;
       audio.src = cfg.src;
+      audio.loop = true;
+      audio.preload = "auto";
       audio.volume = volume / 100;
-      const play = () => audio.play().catch(() => {});
+      try {
+        audio.load();
+      } catch (_) {
+        /* ignore */
+      }
+      const play = () => {
+        try {
+          if (startAt && audio.currentTime < startAt) audio.currentTime = startAt;
+        } catch (_) {
+          /* ignore seek before metadata */
+        }
+        return audio.play().catch(() => {});
+      };
       pauseWhileHidden(() => audio.pause(), play, () => !audio.paused);
       return play;
     }
@@ -700,31 +715,21 @@
     let player = null;
     let ready = false;
     let wanted = false;
-    let resumeTries = 0;
     let resumeTimer = 0;
 
     const start = () => {
       if (!player) return;
       clearTimeout(resumeTimer);
-      resumeTries = 0;
-      try {
-        player.unMute();
-        player.setVolume(volume);
-        if (startAt > 0) player.seekTo(startAt, true);
-        player.playVideo();
-      } catch (_) {
-        /* player not ready yet */
-      }
+      player.seekTo(startAt, true);
+      player.unMute();
+      player.setVolume(volume);
+      player.playVideo();
     };
 
     const keepPlaying = () => {
       if (!wanted || !ready || !player || document.hidden) return;
-      if (resumeTries >= 8) return;
       const state = player.getPlayerState();
       if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.CUED) {
-        resumeTries += 1;
-        player.unMute();
-        player.setVolume(volume);
         player.playVideo();
       }
     };
@@ -732,8 +737,6 @@
     window.onYouTubeIframeAPIReady = () => {
       player = new YT.Player("yt-player", {
         videoId: cfg.youtubeId,
-        width: 200,
-        height: 200,
         playerVars: {
           autoplay: 0,
           controls: 0,
@@ -748,24 +751,24 @@
         events: {
           onReady: () => {
             ready = true;
-            // Cue only — do not mute-autoplay beforehand.
-            // Unmute after a muted buffer often gets blocked and stops at once.
-            player.cueVideoById({ videoId: cfg.youtubeId, startSeconds: startAt });
-            if (wanted) start();
+            if (wanted) {
+              start();
+            } else {
+              // Buffer silently so the nasheed starts the instant the seal is tapped.
+              player.mute();
+              player.playVideo();
+            }
           },
           onStateChange: (e) => {
-            if (e.data === YT.PlayerState.PLAYING) {
-              resumeTries = 0;
-              return;
-            }
             if (e.data === YT.PlayerState.ENDED) {
               player.seekTo(startAt, true);
               player.playVideo();
               return;
             }
+            // YouTube often pauses “hidden” embeds; nudge playback back on.
             if (e.data === YT.PlayerState.PAUSED && wanted && !document.hidden) {
               clearTimeout(resumeTimer);
-              resumeTimer = setTimeout(keepPlaying, 200);
+              resumeTimer = setTimeout(keepPlaying, 120);
             }
           },
         },

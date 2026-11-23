@@ -36,14 +36,11 @@ window.WEDDING = {
   /* WhatsApp number with country code, no + or spaces */
   whatsapp: "916364229355",
 
-  /* Maher Zain — Baraka Allahu Lakuma (official vocals-only version).
-     Streams from YouTube; music version id: "mHpTdsBbYRM".
-     To use your own file instead, put it in music/ and set src, e.g. "music/barakallah.mp3". */
+  /* Background nasheed — local file only (no YouTube). */
   music: {
-    src: "",
-    youtubeId: "61C6FxprHuY",
-    /* Seconds to skip — this video is silent for its first ~8.5s */
-    startAt: 8.5,
+    src: "videos/std-assets/website-song.m4a",
+    youtubeId: "",
+    startAt: 0,
     volume: 70,
   },
 };
